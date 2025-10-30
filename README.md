@@ -15,8 +15,14 @@ consider encapsulation
 + iata_code: string
 + name: string
 + city: string
-+ country: string
-+ timezone: string
++ state: string
++ timezone: Timezones
+
+<<enumeration>> Timezones
+- EST
+- CST
+- MST
+- PST 
 
 # Flight
 + id: int
