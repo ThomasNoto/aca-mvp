@@ -3,9 +3,10 @@
 Webapp used to store flight data. Expose APIs to create and retrieve flights. Only Admins can add flights. Users can book flights.
 
 ## Tech Stack:
-Front: Angular, TypeScript
-Back: C#, .Net Core
-Data: PostgreSQL db running in Docker container
+- Front: Angular, TypeScript
+- Back: C#, .Net Core
+- Data: PostgreSQL db running in Docker container
+- Package Manager: NuGet
 
 ## Class Diagram
 make in lucid
