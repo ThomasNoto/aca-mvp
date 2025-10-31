@@ -13,6 +13,8 @@
 /yarn.lock
 
 # Environment files
+# located in root
+# remember to share with ACA if they want to run locally
 /.env
 
 # Angular CLI and build artefacts
