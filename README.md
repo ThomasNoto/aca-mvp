@@ -17,6 +17,6 @@ Webapp used to store flight data. Expose APIs to create and retrieve flights. On
 - [Class Diagram](https://github.com/ThomasNoto/aca-mvp/blob/main/Project_Diagrams/UML_Class_Diagram.png)
 - [Use Case Diagram](https://github.com/ThomasNoto/aca-mvp/blob/main/Project_Diagrams/UML_Use_Case_Diagram.png)
 
-## Environment Variables
+## Important Notes on Design Choices
 The `.env` file includes local development credentials only  
 In the future, I would make a secrets manager to store credential in a secrets manager such as the one provided by AWS

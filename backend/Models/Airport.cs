@@ -5,9 +5,7 @@ namespace backend.Models
         public int Id { get; set; }
         public string Iata_Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public string City { get; set; } = string.Empty;
         public string State { get; set; } = string.Empty;
-        public Timezones Timezone { get; set; }
     }
 }
 
