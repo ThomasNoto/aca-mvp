@@ -7,7 +7,7 @@ Webapp used to store flight data. Expose APIs to create and retrieve flights. On
 - **Backend**: C#, .Net 8 (ASP.NET Core Web API)
 - **Database**: PostgreSQL (running in Docker container)
 - **Package Managers**: NuGet, npm
-- **Automation:** Bash (for startup orchestration)
+- **Automation:** Bash (for startup)
 
 ## Setup Instructions
 1. Clone the repository
@@ -17,7 +17,7 @@ Webapp used to store flight data. Expose APIs to create and retrieve flights. On
 2. Build the Docker container
    ```bash
    docker compose build
-3. Start the application stack (PostgreSQL + backend + frontend):
+3. Start the application stack in bash (PostgreSQL + backend + frontend):
       ```bash
    ./start.sh
 4. (Optional) Restore sample data with the provided SQL seed:
@@ -27,7 +27,7 @@ Webapp used to store flight data. Expose APIs to create and retrieve flights. On
 6. View the API documentation with Swagger at http://localhost:8080/swagger
 
 
-## Projet Diagrams
+## Project Diagrams
 - [C4 Container Level Diagram](https://github.com/ThomasNoto/aca-mvp/blob/main/Project_Diagrams/C4_Container_Level_Diagram.PNG)
 - [Class Diagram](https://github.com/ThomasNoto/aca-mvp/blob/main/Project_Diagrams/UML_Class_Diagram.png)
 - [Use Case Diagram](https://github.com/ThomasNoto/aca-mvp/blob/main/Project_Diagrams/UML_Use_Case_Diagram.png)

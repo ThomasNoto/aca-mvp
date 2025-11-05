@@ -41,6 +41,11 @@ app.UseSwaggerUI();
 // not supporting https because this is a locally hosted mvp
 // however, I would in production to protect user data
 // app.UseHttpsRedirection();
+
+// IMPORTANT
+// allows CORS (Cross-Origin Resource Sharing) so that frontend on port 4200 can
+// talk to and exchange resources with backend on port 8080
+app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.MapControllers();
 
 app.Run();
