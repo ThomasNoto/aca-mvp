@@ -4,9 +4,11 @@ using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls(builder.Configuration["applicationUrl"]!);
 
 try {
-    Env.Load(); 
+    Env.Load("../.env");
+    Console.WriteLine(".env file found!"); 
 } catch {
     Console.WriteLine("No .env file found."); 
 }
@@ -36,7 +38,9 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+// not supporting https because this is a locally hosted mvp
+// however, I would in production to protect user data
+// app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();

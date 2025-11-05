@@ -1,6 +1,6 @@
-@backend_HostAddress = http://localhost:5267
+@backend_HostAddress = http://localhost:8080
 
-GET {{backend_HostAddress}}/weatherforecast/
+GET {{backend_HostAddress}}/aca-mvp/
 Accept: application/json
 
 ###

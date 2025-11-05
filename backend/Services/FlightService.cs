@@ -9,10 +9,12 @@ namespace backend.Services
         // _context is an instance of the ApiDbContext class
         // this gives EF Core access to all tables in db
         private readonly ApiDbContext _context;
+        private readonly ILogger<FlightService> _logger;
         
-        public FlightService(ApiDbContext context)
+        public FlightService(ApiDbContext context, ILogger<FlightService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
 
@@ -45,30 +47,43 @@ namespace backend.Services
         // IEnumerbale is an interface. It can be returned as an array, list, or other collections
         public async Task<IEnumerable<FlightDTO>> SearchFlightsAsync(string? origin, string? destination)
         {
+            _logger.LogInformation("Searching flights with origin: {Origin}, destination: {Destination}", origin, destination);
             // querying the entire flight table
             // could be bad in production if there were millions of entries
             // but it works for the sake of an MVP like this
             var query = _context.Flights.AsQueryable();
-            // saves db queries by relaing all IATAs to airport IDs in a dict
+            // saves db queries by relating all mapping all IATAs to the airport IDs
+            // and vice versa for DTO mapping
             // there are only 487 commerical airports in the USA
             // so query the entire airport table into a dictionary would result nelgible
             // space complexity even in real production
-            var airports = await _context.Airports.ToDictionaryAsync(a => a.Id, a => a.Iata_Code);
+            var airportsIataToId = await _context.Airports.ToDictionaryAsync(a => a.Iata_Code, a => a.Id);
+            var airportsIdToIata = await _context.Airports.ToDictionaryAsync(a => a.Id, a => a.Iata_Code);
+
+            _logger.LogInformation("Loaded dict with {Count} airports", airportsIataToId.Count);
 
             if (!string.IsNullOrEmpty(origin))
             {
-                var originAirportId = airports.FirstOrDefault(a => a.Value == origin).Key;
+                origin = origin.ToUpper();
 
-                if (originAirportId != 0)
-                    query = query.Where(f => f.Origin_Airport_Id == originAirportId);
+                if (airportsIataToId.ContainsKey(origin))
+                {
+                    var id = airportsIataToId[origin];
+                    _logger.LogInformation("Found origin: {Origin},  Id: {Id}", origin, id);
+                    query = query.Where(f => f.Origin_Airport_Id == id);
+                }
+                else
+                {
+                    _logger.LogWarning("Origin IATA {Origin} not found in airport dictionary", origin);
+                }                
             }
 
             if (!string.IsNullOrEmpty(destination))
             {
-                var destinationAirportId = airports.FirstOrDefault(a => a.Value == destination).Key;
+                destination = destination.ToUpper();
 
-                if (destinationAirportId != 0)
-                    query = query.Where(f => f.Destination_Airport_Id == destinationAirportId);
+                if (airportsIataToId.ContainsKey(destination))
+                    query = query.Where(f => f.Destination_Airport_Id == airportsIataToId[destination]);
             }
 
             // execute the query
@@ -78,8 +93,8 @@ namespace backend.Services
             {
                 Id = f.Id,
                 Flight_Number = f.Flight_Number,
-                Origin_Iata = airports[f.Origin_Airport_Id],
-                Destination_Iata = airports[f.Destination_Airport_Id],
+                Origin_Iata = airportsIdToIata[f.Origin_Airport_Id],
+                Destination_Iata = airportsIdToIata[f.Destination_Airport_Id],
                 Departure_Time = f.Departure_Time
             }).ToList();
 

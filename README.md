@@ -1,19 +1,24 @@
 ### ACA-MVP 
 ## Concept:
-Webapp used to store flight data. Expose APIs to create and retrieve flights. Only Admins can add flights. Users can book flights.
+Webapp used to store flight data. Expose APIs to create and retrieve flights. Only Admins can add flights. Users can search and view flights.
 
 ## Tech Stack:
-- Front: Angular, TypeScript
-- Back: C#, .Net Core
-- Data: PostgreSQL db running in Docker container
+- Frontend: Angular, TypeScript
+- Backend: C#, .Net Core
+- Data: PostgreSQL (running in Docker container)
 - Package Manager: NuGet
 
 ## Setup Instructions
 1. Clone the repository  
-2. Run `docker compose up` to start the database  
-3. Navigate to `/backend` and run `dotnet run` to start the API
+2. Run `docker compose up` to start the database 
+3. (Optional) Restore sample data:
+   ```bash
+   docker exec -i aca_postgres psql -U postgres aca_mvp < aca_mvp_seed.sql
+4. Navigate to `/backend` and run `dotnet run` to start the API
+5. view api documentation at http://localhost:8080/swagger
 
-## UML Diagrams
+## Projet Diagrams
+- [C4 Container Level Diagram](https://github.com/ThomasNoto/aca-mvp/blob/main/Project_Diagrams/C4_Container_Level_Diagram.PNG)
 - [Class Diagram](https://github.com/ThomasNoto/aca-mvp/blob/main/Project_Diagrams/UML_Class_Diagram.png)
 - [Use Case Diagram](https://github.com/ThomasNoto/aca-mvp/blob/main/Project_Diagrams/UML_Use_Case_Diagram.png)
 
