@@ -21,8 +21,19 @@ export class App {
 
   users$ = this.getUsers();
 
+  isDropdownOpen = false;
+  selectedUser: User | null = null;
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  selectUser(user: User) {
+    this.selectedUser = user;
+    this.isDropdownOpen = false;
+  }
+
   private getUsers(): Observable<User[]> {
     return this.http.get<User[]>('http://localhost:8080/api/Users');
-
   }
 }

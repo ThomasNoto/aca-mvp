@@ -1,18 +1,104 @@
-<div class="flex flex-col items-center p-8 bg-slate-50 rounded-lg shadow-md">
+<!-- <div class="flex flex-col items-center p-8 bg-slate-50 rounded-lg shadow-md">
   <img href="../assets/ACA_Flight_Tracker_Logo.png" alt="ACA Flight Tracker Logo" class="w-40 mb-4 drop-shadow-lg">
   <h1 class="text-3xl font-bold text-blue-700">ACA Flight Tracker</h1>
-</div>
+</div> -->
 
-<!-- 
-* gets users array asynchronously with piping
-* if there are users, show them
--->
-@if (users$ | async;as users) {
-  @if(users.length > 0) {
-    @for (user of users; track $index) {
-      <p>{{user.name}}</p>
+<div class="flex flex-col min-h-screen bg-slate-50 text-gray-800">
+  <!-- Header -->
+  <header class="flex justify-between items-center px-8 py-4 bg-white shadow-md">
+    <!-- Left: Logo + Title -->
+    <div class="flex items-center space-x-4">
+      <div class="w-20 h-20 flex items-center justify-center rounded-md shadow-inner">
+        <img src="/ACA_Flight_Tracker_Logo.png">
+      </div>
+      <h1 class="text-5xl font-bold text-blue-700 tracking-tight">ACA Flight Tracker</h1>
+    </div>
+
+    <!-- login dropdown -->
+    <div class="relative">
+      <button class="h-12 px-6 m-2 bg-blue-600 hover:bg-blue-700 text-lg text-white font-bold px-4 py-2 rounded-lg shadow"
+        (click)="toggleDropdown()">
+        @if (selectedUser) {
+          Switch User
+        } @else {
+          Login ▼
+        }
+      </button>
+
+      <!-- only show dropdown on login button click -->
+      @if (isDropdownOpen) {
+        @if (users$ | async; as users) {
+          <div class="absolute right-0 top-full w-40 bg-white border rounded-lg shadow-md">
+            @for (user of users; track user.id) {
+              <div class="px-4 py-2 hover:bg-blue-50 cursor-pointer" 
+                (click)="selectUser(user)">
+                {{ user.name }}
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </header>
+
+  <!-- main page -->
+  <main class="flex flex-col items-center flex-1 p-8 space-y-6">
+    @if (selectedUser) {
+      <p class="text-lg font-semibold">Welcome, {{ selectedUser.name }}!</p>
+
+      <div class="flex space-x-4">
+        <div class="flex flex-col">
+          <label class="font-semibold text-sm mb-1">Origin</label>
+          <input
+            type="text"
+            placeholder="Enter origin IATA..."
+            class="border border-gray-300 rounded-md px-4 py-2 w-48 focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
+        <div class="flex flex-col">
+          <label class="font-semibold text-sm mb-1">Destination</label>
+          <input type="text" placeholder="Enter destination IATA..."
+            class="border border-gray-300 rounded-md px-4 py-2 w-48 focus:ring-2 focus:ring-blue-500 outline-none"/>
+        </div>
+        <button class="bg-blue-600 text-white rounded-md px-4 py-2 mt-6 shadow hover:bg-blue-700 transition">
+          Search
+        </button>
+      </div>
+
+      <div>
+        <button class="bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow hover:bg-green-700 transition">
+          Create Flight
+        </button>
+      </div>
+
+      <div class="border border-gray-300 rounded-lg shadow-md w-96 h-40 flex items-center justify-center bg-white">
+        <span class="text-gray-500 italic">Form will appear here</span>
+      </div>
+    } @else {
+      <p class="text-2xl font-semibold text-blue-700 italic mt-10 text-center drop-shadow-sm">
+        Please select a user via the login menu <br>
+        in the top right to continue.
+      </p>
     }
-  } @else {
-    <p>No users found...</p>
-  }
-}
+  </main>
+
+  <!-- page footer -->
+  <footer class="flex justify-center space-x-6 py-4 bg-gray-100 shadow-inner">
+    <!-- hidden subliminal messaging so that you will hire me :) -->
+    <p class="text-sm text-gray-100 italic mt-2 select-none">
+      HIRE ME!
+    </p>
+    <!-- target="_blank" makes tab open in a new window-->
+    <a href="http://localhost:8080/swagger"
+      target="_blank"
+      class="text-blue-600 hover:underline font-medium">
+      Swagger API Docs
+    </a>
+    <p class="text-blue-600 hover:underline font-medium">|</p>
+    <a href="https://github.com/ThomasNoto/aca-mvp"
+      target="_blank"
+      class="text-blue-600 hover:underline font-medium">
+      GitHub Repo
+    </a>
+  </footer>
+</div>
