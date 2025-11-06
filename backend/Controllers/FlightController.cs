@@ -29,10 +29,11 @@ namespace backend.Controllers
             [FromQuery] string? origin,
             [FromQuery] string? destination)
         {
-            if (string.IsNullOrEmpty(origin) && string.IsNullOrEmpty(destination))
-            {
-                return BadRequest("Please specify at least an origin or destination.");
-            }
+            _logger.LogInformation("Received Query: From {@origin} to {@destination}", origin, destination);
+            // if (string.IsNullOrEmpty(origin) && string.IsNullOrEmpty(destination))
+            // {
+            //     return BadRequest("Please specify at least an origin or destination.");
+            // }
 
             var flights = await _flightService.SearchFlightsAsync(origin, destination);
 

@@ -1,12 +1,13 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 import { User } from '../models/user.model';
+import { Flight } from '../models/flight.model';
 // import { UserRoles } from '../models/user-role.enum';
 // import { Airport } from '../models/airport.model';
 // import { Flight } from '../models/flight.model';
@@ -18,7 +19,8 @@ import { User } from '../models/user.model';
     HttpClientModule, 
     AsyncPipe, 
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DatePipe,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
@@ -65,6 +67,85 @@ export class App {
         console.log(`Success!`, value);
       }
     });
+  }
+
+  // search flight logic
+  flights: Flight[] = [];
+  isSearching = false;
+  isClearing = false;
+  searchOrigin: string = '';
+  searchDestination: string = '';
+
+
+  searchFlightForm = new FormGroup({
+    origin_Airport_Iata: new FormControl<string>(''),
+    destination_Airport_Iata: new FormControl<string>('')
+  })
+
+  onFlightSearch() {
+    if (this.isClearing) {
+      this.searchFlightForm.reset();
+      this.flights = [];
+      this.currentPage = 1;
+      this.isClearing = false;
+      this.isSearching = false;
+      return;
+    }
+
+    this.isSearching = true;
+    const origin = this.searchFlightForm.value.origin_Airport_Iata ?? '';
+    const destination =  this.searchFlightForm.value.destination_Airport_Iata  ?? '';
+    this.searchOrigin = origin || 'Anywhere';
+    this.searchDestination = destination || 'Anywhere';
+    
+    console.log(`Searching for ${origin} to ${destination}`)
+
+    // subscribing to the observable once delivered
+  this.getFlights(origin, destination).subscribe({
+    next: (flights) => {
+      // Sort flights by departure time ascending
+      this.flights = flights.sort(
+        (a, b) =>
+          new Date(a.departure_Time).getTime() - new Date(b.departure_Time).getTime()
+      );
+
+      console.log('Flights found:', this.flights);
+
+      // Reset form and toggle button to "Clear"
+      this.searchFlightForm.reset();
+      this.isClearing = true;
+      this.isSearching = false;
+      this.currentPage = 1;
+      }
+    });
+  }
+
+  private getFlights(origin: string, destination: string): Observable<Flight[]> {
+    const url = `http://localhost:8080/api/Flights/search?origin=${origin}&destination=${destination}`;
+
+    console.log('Calling backend with:', origin, destination);
+    console.log('url: ', url)
+
+    return this.http.get<Flight[]>(url);
+  }
+
+  pageSize = 4;
+  currentPage = 1;
+
+  get totalPages(): number {
+    return Math.ceil(this.flights.length / this.pageSize);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
   }
 
   // user logic
