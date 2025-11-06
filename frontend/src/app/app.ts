@@ -1,6 +1,6 @@
 import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+// import { RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,7 +15,7 @@ import { UserRoles } from '../models/user-role.enum';
 @Component({
   selector: 'app-root',
   imports: [
-    RouterOutlet, 
+    // RouterOutlet, 
     HttpClientModule, 
     AsyncPipe, 
     FormsModule,
