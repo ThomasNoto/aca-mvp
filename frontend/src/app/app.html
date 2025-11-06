@@ -122,14 +122,15 @@
         }
       </div>
     }
-
-      <div class="mt-6">
-        <button
-          class="bg-blue-900 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition"
-          (click)="toggleCreateFlight()">
-          {{ isCreatingFlight ? 'Cancel' : 'Create Flight' }}
-        </button>
-      </div>
+      @if (isAdminSession) {
+        <div class="mt-6">
+          <button
+            class="bg-blue-900 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition"
+            (click)="toggleCreateFlight()">
+            {{ isCreatingFlight ? 'Cancel' : 'Create Flight' }}
+          </button>
+        </div>
+      }
 
       @if (isCreatingFlight) {
         <div class="transition-all duration-300 ease-in-out transform opacity-100 scale-100">
@@ -180,6 +181,14 @@
               Submit Flight
             </button>
           </form>
+          @if (flightSuccess) {
+          <div
+            class="mt-4 text-center font-semibold text-sm p-3 rounded-md shadow-sm"
+            [class.bg-green-100]="flightMessage.includes('')"
+          >
+            {{ flightMessage }}
+          </div>
+}
         </div>
       } @else {
         <div class="opacity-0 scale-95"></div>

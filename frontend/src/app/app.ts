@@ -8,7 +8,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 
 import { User } from '../models/user.model';
 import { Flight } from '../models/flight.model';
-// import { UserRoles } from '../models/user-role.enum';
+import { UserRoles } from '../models/user-role.enum';
 // import { Airport } from '../models/airport.model';
 // import { Flight } from '../models/flight.model';
 
@@ -26,10 +26,13 @@ import { Flight } from '../models/flight.model';
   styleUrl: './app.css'
 })
 export class App {
+  isAdminSession: boolean = false; // mimics behavior jwt token on frontend
   http = inject(HttpClient);
-
   // create flight logic
   isCreatingFlight = false;
+  flightSuccess: boolean = false;
+  flightMessage: string = '';
+
 
   toggleCreateFlight() {
     this.isCreatingFlight = !this.isCreatingFlight;
@@ -64,7 +67,16 @@ export class App {
     this.http.post('http://localhost:8080/api/Flights', addFlight)
     .subscribe({
       next: (value) => {
-        console.log(`Success!`, value);
+        this.flightSuccess = true;
+        this.flightMessage = 'Flight created successfully!';
+        this.createFlightForm.reset();
+        this.isCreatingFlight = false;
+
+        // Hide the message after a few seconds
+        setTimeout(() => {
+          this.flightSuccess = false;
+          this.flightMessage = '';
+        }, 4000);
       }
     });
   }
@@ -97,7 +109,7 @@ export class App {
     const destination =  this.searchFlightForm.value.destination_Airport_Iata  ?? '';
     this.searchOrigin = origin || 'Anywhere';
     this.searchDestination = destination || 'Anywhere';
-    
+
     console.log(`Searching for ${origin} to ${destination}`)
 
     // subscribing to the observable once delivered
@@ -160,7 +172,12 @@ export class App {
 
   selectUser(user: User) {
     this.selectedUser = user;
+    this.isAdminSession = user.role === 0;
     this.isDropdownOpen = false;
+
+    // put user and token in local storage to persist across resets
+    localStorage.setItem('isAdminSession', String(this.isAdminSession));
+    localStorage.setItem('selectedUser', JSON.stringify(user));
   }
 
   private getUsers(): Observable<User[]> {
